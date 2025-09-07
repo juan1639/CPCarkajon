@@ -1,0 +1,178 @@
+10 mode 0
+20 border 2: paper 6: pen 1
+30 cls
+40 defint a-z
+45 dim l(20,12)
+
+46 '=================================
+47 '      C O N S T A N T E S
+48 '---------------------------------
+50 limitede=20: limitebajo=24
+60 limiteiz=1:limitealto=2
+70 jyconst=23:yscores=1
+
+89 '---------------------------------
+90 hi=3000
+
+96 '=================================
+97 '      U D G s
+98 '---------------------------------
+100 gosub 9000
+
+116 '================================
+117 '      Main Menu
+118 '--------------------------------
+120 gosub 8000
+
+136 '================================
+137 '      U p d a t e s
+138 '--------------------------------
+140 gosub 7000
+
+146 '================================
+147 '      Show Scores
+148 '--------------------------------
+150 gosub 7500
+
+156 '================================
+157 '      Carga Nivel X
+158 '--------------------------------
+160 gosub 5000
+
+296 '================================
+297 '      Pre Bucle Principal
+298 '--------------------------------
+300 gosub 4500'dibuja limites
+349 '--------------------------------
+350 pen 11
+360 locate jx,jy:print chr$(242);chr$(243);
+495 '================================
+496 '
+497 '         Bucle Principal
+498 '
+499 '-------------------------------- 
+500 pen 11
+510 if inkey(8)=0 and jx>limiteiz then locate jx,jy:print chr$(242);chr$(243);" ":jx=jx-1:goto 530
+520 if inkey(1)=0 and jx<limitede-2 then locate jx,jy:print " ";chr$(242);chr$(243);" ":jx=jx+1:goto 530
+529'---------------------------------
+530 pen 10
+535 locate 1,23:print chr$(246)
+536 locate 20,23:print chr$(247)
+539 '--------------------------------
+540 pen 4
+550 locate px,py:print " "
+560 px=px+pvelx: py=py+pvely
+570 locate px,py:print chr$(241)
+579 '--------------------------------
+580 gosub 1200'check impacto-ladrillo
+599 '--------------------------------
+600 if (px+pvelx >=limitede and pvelx>0) or (px+pvelx<=limiteiz and pvelx<0) then pvelx=-pvelx:sound 1,1800,5:sound 1,70,5
+610 if py+pvely<=limitealto and pvely<0 then pvely=-pvely:sound 1,1800,5:sound 1,70,5
+620 if py+pvely=jy and (px>=jx-1 and px<=jx+2) then gosub 1000'impacto pala-bola
+630 if py+pvely>=limitebajo then end
+689 '--------------------------------
+690 goto 500
+
+696 '================================
+697 '      F I N  Bucle Principal
+698 '--------------------------------
+996 '================================
+997 '     Impacto Pala-bola
+998 '--------------------------------
+1000 pvely=-pvely
+1010 sound 1,450,5:sound 1,60,5
+1020 if rnd*100<20 and pvelx>0 and px<limitede-1 then locate px,py:print " ":px=px+1:goto 1090
+1030 if rnd*100<20 and pvelx<0 and px>limiteiz+1 then locate px,py:print " ":px=px-1:goto 1090
+1090 return
+
+1196 '================================
+1197 '     check impacto-ladrillo
+1198 '--------------------------------
+1200 if py>12 then goto 1250
+1210 if l(px,py)=1 then l(px,py)=0:sound 1,110,5:sound 1,340,5:puntos=puntos+110+(int(rnd*6)*10):gosub 7550
+1250 rem
+1290 return
+
+4496 '===============================
+4497 '      Dibuja Limites
+4498 '-------------------------------
+4500 pen 10
+4510 for x=2 to 19
+4520 locate x,yscores+1:print chr$(154)
+4530 next x
+4540 locate 1,yscores+1:print chr$(248)
+4550 locate 20,yscores+1:print chr$(249)
+4600 for y=yscores+2 to 23
+4610 locate 1,y:print chr$(246)
+4620 locate 20,y:print chr$(247)
+4630 next y
+4690 return
+
+4996 '===============================
+4997 '      Carga Nivel X
+4998 '-------------------------------
+5000 for y=3 to 11
+5010 for x=2 to 19
+5020 l(x,y)=0'vacio por defecto
+5030 next x
+5040 next y
+5100 randomize time
+5105 for y=5 to 8
+5110 for x=4 to 17 step 1
+5120 color=rnd*12
+5130 if color=6 or color=5 then goto 5120 else pen color
+5140 locate x,y:print chr$(245)
+5145 l(x,y)=1'activo
+5150 next x
+5160 next y
+5170 return
+
+6996 '===============================
+6997 '      U p d a t e s
+6998 '-------------------------------
+7000 puntos=0
+7010 nivel=1
+7020 vidas=3
+7099 '-------------------------------
+7100 px= 10: py=15
+7120 pvelx=1: pvely=1
+7140 jx=10: jy=jyconst
+7160 jvelx=1: jvely=0
+7190 return
+
+7496 '===============================
+7497 '      Show Scores
+7498 '-------------------------------
+7500 pen 1
+7510 locate 2,yscores:print "Nivel:";
+7520 pen 4
+7530 print nivel
+7550 pen 4
+7560 locate 12,yscores:print using"######";puntos
+7590 return
+
+7996 '===============================
+7997 '      Main Menu
+7998 '-------------------------------
+8000 return
+
+8996 '================================
+8997 '      U D G s
+8998 '--------------------------------
+9000 symbol 240, 0, 60,126,126,126,126, 60,  0
+9010 symbol 241, 0,  0, 24, 60, 60, 24,  0,  0
+9020 symbol 242, 111,175,175,175,175,111,  0,  0
+9030 symbol 243, 246,245,245,245,245,246,  0,  0
+9040 symbol 244, 255,255,255,255,255,255,255,  0
+9050 symbol 245, 254,254,254,254,254,254,254,  0
+9060 symbol 246, 3,  3,  3,  3,  3,  3,  3,  3
+9070 symbol 247, 192,192,192,192,192,192,192,192
+9080 symbol 248, 0,0,0,0,1,3,3,3
+9090 symbol 249, 0,0,0,0,128,192,192,192
+9290 return
+9990 '--------------------------------
+9991 ' CALL &BD19 (frame) | CALL &BB18 (while inkey$:wend)
+9999 end
+
+
+
